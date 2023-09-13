@@ -12,29 +12,30 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
-public class JobConfiguration {
+public class JobInstanceConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
     public Job job() {
-        return jobBuilderFactory.get("job")
+
+        return jobBuilderFactory.get("Job")
                                 .start(step1())
                                 .next(step2())
                                 .build();
     }
 
     private Step step1() {
-        return stepBuilderFactory.get("step1")
+        return stepBuilderFactory.get("Step1")
                                  .tasklet(new Tasklet() {
                                      @Override
                                      public RepeatStatus execute(
                                          final StepContribution contribution,
                                          final ChunkContext chunkContext) throws Exception {
-                                         System.out.println("step1 was executed");
+
                                          return RepeatStatus.FINISHED;
                                      }
                                  })
@@ -42,13 +43,13 @@ public class JobConfiguration {
     }
 
     private Step step2() {
-        return stepBuilderFactory.get("step2")
+        return stepBuilderFactory.get("Step2")
                                  .tasklet(new Tasklet() {
                                      @Override
                                      public RepeatStatus execute(
                                          final StepContribution contribution,
                                          final ChunkContext chunkContext) throws Exception {
-                                         System.out.println("step1 was executed");
+
                                          return RepeatStatus.FINISHED;
                                      }
                                  })
