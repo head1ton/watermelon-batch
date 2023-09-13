@@ -11,7 +11,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class JobRepositoryListener implements JobExecutionListener {
 
     @Autowired
