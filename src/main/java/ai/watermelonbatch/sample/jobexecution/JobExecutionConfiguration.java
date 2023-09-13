@@ -1,4 +1,4 @@
-package ai.watermelonbatch.sample.jobparameter;
+package ai.watermelonbatch.sample.jobexecution;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +14,9 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Configuration
 @RequiredArgsConstructor
-//@Configuration
-public class JobParameterConfiguration {
+public class JobExecutionConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -38,21 +38,6 @@ public class JobParameterConfiguration {
                                          final StepContribution contribution,
                                          final ChunkContext chunkContext) throws Exception {
 
-                                         JobParameters jobParameters = contribution.getStepExecution()
-                                                                                   .getJobExecution()
-                                                                                   .getJobParameters();
-                                         jobParameters.getString("name");
-                                         jobParameters.getLong("seq");
-                                         jobParameters.getDate("date");
-                                         jobParameters.getDouble("age");
-
-                                         Map<String, Object> jobParameters1 = chunkContext.getStepContext()
-                                                                                          .getJobParameters();
-                                         jobParameters1.get("name");
-                                         jobParameters1.get("seq");
-                                         jobParameters1.get("date");
-                                         jobParameters1.get("age");
-
                                          System.out.println("Step1 has executed");
                                          return RepeatStatus.FINISHED;
                                      }
@@ -69,10 +54,10 @@ public class JobParameterConfiguration {
                                          final StepContribution contribution,
                                          final ChunkContext chunkContext) throws Exception {
                                          System.out.println("Step2 has executed");
+//                                         throw new RuntimeException("Step2 has failed");
                                          return RepeatStatus.FINISHED;
                                      }
                                  })
                                  .build();
     }
-
 }
