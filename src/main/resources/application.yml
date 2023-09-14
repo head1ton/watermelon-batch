@@ -2,6 +2,10 @@ spring:
   profiles:
     active: mysql
 
+  batch:
+    job:
+      names: ${job.name:NONE}
+
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
@@ -25,7 +29,7 @@ spring:
   batch:
     jdbc:
       initialize-schema: embedded
-
+#      table-prefix: SYSTEM_
 
 --- # mysql
 
@@ -52,5 +56,3 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
-    job:
-      enabled: false
