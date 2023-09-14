@@ -1,4 +1,4 @@
-package ai.watermelonbatch.job_batch;
+package ai.watermelonbatch.sample.job_batch.jobbasic;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -12,31 +12,33 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
-public class JobConfiguration2 {
+public class JobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job batchJob2() {
-        return this.jobBuilderFactory.get("batchJob2")
+    @Primary
+    public Job batchJob1() {
+        return this.jobBuilderFactory.get("batchJob1")
                                      .incrementer(new RunIdIncrementer())
-                                     .start(step3())
-                                     .next(step4())
+                                     .start(step1())
+                                     .next(step2())
                                      .build();
     }
 
     @Bean
-    public Step step3() {
-        return stepBuilderFactory.get("step3")
+    public Step step1() {
+        return stepBuilderFactory.get("step1")
                                  .tasklet(new Tasklet() {
                                      @Override
                                      public RepeatStatus execute(StepContribution contribution,
                                          ChunkContext chunkContext) throws Exception {
-                                         System.out.println("step3 has executed");
+                                         System.out.println("step1 has executed");
                                          return RepeatStatus.FINISHED;
                                      }
                                  })
@@ -44,10 +46,10 @@ public class JobConfiguration2 {
     }
 
     @Bean
-    public Step step4() {
-        return stepBuilderFactory.get("step4")
+    public Step step2() {
+        return stepBuilderFactory.get("step2")
                                  .tasklet((contribution, chunkContext) -> {
-                                     System.out.println("step4 has executed");
+                                     System.out.println("step2 has executed");
                                      return RepeatStatus.FINISHED;
                                  })
                                  .build();
