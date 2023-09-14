@@ -1,6 +1,10 @@
 spring:
   profiles:
-    active: mysql
+    active: local
+
+  batch:
+    job:
+      names: ${job.name:NONE}
 
 logging.level:
   org.hibernate.SQL: debug
@@ -25,7 +29,7 @@ spring:
   batch:
     jdbc:
       initialize-schema: embedded
-
+#      table-prefix: SYSTEM_
 
 --- # mysql
 
@@ -52,5 +56,3 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
-    job:
-      enabled: false
