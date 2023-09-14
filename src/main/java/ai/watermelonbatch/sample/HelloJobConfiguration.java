@@ -1,4 +1,4 @@
-package ai.watermelonbatch;
+package ai.watermelonbatch.sample;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;

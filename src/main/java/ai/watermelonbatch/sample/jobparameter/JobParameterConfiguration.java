@@ -1,8 +1,9 @@
-package ai.watermelonbatch;
+package ai.watermelonbatch.sample.jobparameter;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -13,31 +14,46 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Slf4j
-@Configuration
 @RequiredArgsConstructor
-public class DBJobConfiguration {
+//@Configuration
+public class JobParameterConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job job() {
-        return jobBuilderFactory.get("job")
-                                .start(step1())
-                                .next(step2())
-                                .build();
+    public Job BatchJob() {
+        return this.jobBuilderFactory.get("Job")
+                                     .start(step1())
+                                     .next(step2())
+                                     .build();
     }
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get("step1")
+        return stepBuilderFactory.get("Step1")
                                  .tasklet(new Tasklet() {
                                      @Override
                                      public RepeatStatus execute(
                                          final StepContribution contribution,
                                          final ChunkContext chunkContext) throws Exception {
-                                         log.info("step1 was executed");
+
+                                         JobParameters jobParameters = contribution.getStepExecution()
+                                                                                   .getJobExecution()
+                                                                                   .getJobParameters();
+                                         jobParameters.getString("name");
+                                         jobParameters.getLong("seq");
+                                         jobParameters.getDate("date");
+                                         jobParameters.getDouble("age");
+
+                                         Map<String, Object> jobParameters1 = chunkContext.getStepContext()
+                                                                                          .getJobParameters();
+                                         jobParameters1.get("name");
+                                         jobParameters1.get("seq");
+                                         jobParameters1.get("date");
+                                         jobParameters1.get("age");
+
+                                         System.out.println("Step1 has executed");
                                          return RepeatStatus.FINISHED;
                                      }
                                  })
@@ -46,13 +62,13 @@ public class DBJobConfiguration {
 
     @Bean
     public Step step2() {
-        return stepBuilderFactory.get("step1")
+        return stepBuilderFactory.get("Step2")
                                  .tasklet(new Tasklet() {
                                      @Override
                                      public RepeatStatus execute(
                                          final StepContribution contribution,
                                          final ChunkContext chunkContext) throws Exception {
-                                         log.info("step2 was executed");
+                                         System.out.println("Step2 has executed");
                                          return RepeatStatus.FINISHED;
                                      }
                                  })

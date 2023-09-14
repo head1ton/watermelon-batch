@@ -2,7 +2,12 @@ spring:
   profiles:
     active: mysql
 
----
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+
+--- # local
+
 spring:
   config:
     activate:
@@ -13,22 +18,39 @@ spring:
       username: sa
       password:
       driver-class-name: org.h2.Driver
+  #  jpa:
+  #    hibernate:
+  #      ddl-auto: none
+  #    show-sql: true
   batch:
     jdbc:
       initialize-schema: embedded
 
 
----
+--- # mysql
+
 spring:
   config:
     activate:
       on-profile: mysql
+  #  datasource:
+  #    hikari:
+  #      jdbc-url: jdbc:h2:tcp://localhost/~/watermelon
+  #      username: sa
+  #      password:
+  #      driver-class-name: org.h2.Driver
   datasource:
     hikari:
-      jdbc-url: jdbc:mysql://localhost:3306/watermelonbatch?useUnicode=true&characterEncoding=utf8
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/watermelon
       username: testadmin
       password: password
-      driver-class-name: com.mysql.jdbc.Driver
+  #  jpa:
+  #    hibernate:
+  #      ddl-auto: create-drop
+  #    show-sql: true
   batch:
     jdbc:
       initialize-schema: always
+    job:
+      enabled: false
