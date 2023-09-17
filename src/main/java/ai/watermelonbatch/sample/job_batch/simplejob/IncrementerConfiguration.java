@@ -1,5 +1,6 @@
 package ai.watermelonbatch.sample.job_batch.simplejob;
 
+import ai.watermelonbatch.sample.CustomJobParametersIncrementer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -10,7 +11,6 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 @RequiredArgsConstructor

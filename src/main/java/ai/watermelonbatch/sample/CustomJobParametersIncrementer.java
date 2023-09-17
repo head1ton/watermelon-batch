@@ -1,4 +1,4 @@
-package ai.watermelonbatch.sample.job_batch.simplejob;
+package ai.watermelonbatch.sample;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
