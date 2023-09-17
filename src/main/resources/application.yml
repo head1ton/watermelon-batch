@@ -50,10 +50,11 @@ spring:
       jdbc-url: jdbc:mysql://127.0.0.1:3306/watermelon
       username: testadmin
       password: password
-  #  jpa:
-  #    hibernate:
-  #      ddl-auto: create-drop
-  #    show-sql: true
+  #    jpa:
+  #      hibernate:
+  #        ddl-auto: create-drop
+  #      show-sql: true
   batch:
     jdbc:
       initialize-schema: always
+#      isolation-level-for-create: default

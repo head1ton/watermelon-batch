@@ -1,30 +1,36 @@
 package ai.watermelonbatch.sample;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class JdbcCursorConfiguration {
+public class JpaCursorConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final DataSource dataSource;
-    private final int chunkSize = 10;
+    private final EntityManagerFactory entityManagerFactory;
 
     @Bean
     public Job job() {
         return jobBuilderFactory.get("batchJob")
-//            .incrementer(new CustomJobParametersIncrementer())
+                                .incrementer(new RunIdIncrementer())
                                 .start(step1())
                                 .build();
     }
@@ -32,29 +38,33 @@ public class JdbcCursorConfiguration {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                                 .<Customer, Customer>chunk(chunkSize)
+                                 .<Customer, Customer>chunk(2)
                                  .reader(customItemReader())
                                  .writer(customItemWriter())
                                  .build();
     }
 
-    private ItemReader<Customer> customItemReader() {
-        return new JdbcCursorItemReaderBuilder<Customer>()
-            .name("jdbcCursorItemReader")
-            .fetchSize(chunkSize)
-            .sql(
-                "select id, firstName, lastName, birthdate from customer where firstName like ? order by lastName, firstName")
-            .beanRowMapper(Customer.class)
-            .queryArguments("A%")
-            .dataSource(dataSource)
+    @Bean
+    public ItemReader<? extends Customer> customItemReader() {
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("firstName", "A%");
+
+        String queryString = "select c from Customer c where firstName like :firstName";
+        return new JpaCursorItemReaderBuilder<Customer>()
+
+            .name("jpaCursorItemReader")
+            .entityManagerFactory(entityManagerFactory)
+            .queryString(queryString)
+            .parameterValues(parameters)
             .build();
     }
 
+
     @Bean
-    public ItemWriter<? super Customer> customItemWriter() {
+    public ItemWriter<Customer> customItemWriter() {
         return items -> {
             for (Customer item : items) {
-                System.out.println(item.toString());
+                System.out.println("item ===> " + item.toString());
             }
         };
     }
