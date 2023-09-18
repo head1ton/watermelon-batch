@@ -8,6 +8,9 @@ spring:
 
   jpa:
     hibernate:
+      #      naming:
+      #        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      #        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     #    show-sql: true

@@ -13,6 +13,6 @@ public class CustomerRowMapper implements
             rs.getLong("id"),
             rs.getString("firstName"),
             rs.getString("lastName"),
-            rs.getDate("birthDate"));
+            rs.getString("birthDate"));
     }
 }

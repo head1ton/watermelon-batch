@@ -42,6 +42,8 @@ dependencies {
 
 //    implementation 'org.springframework:spring-oxm'
 //    implementation 'com.thoughtworks.xstream:xstream'
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+
 
 }
 
