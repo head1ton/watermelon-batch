@@ -1,26 +1,27 @@
 package ai.watermelonbatch;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.batch.item.support.CompositeItemProcessor;
-import org.springframework.batch.item.support.builder.CompositeItemProcessorBuilder;
+import org.springframework.batch.item.support.ClassifierCompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@RequiredArgsConstructor
 @Configuration
-public class CompositionItemConfiguration {
+@RequiredArgsConstructor
+public class ClassifierConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -36,21 +37,23 @@ public class CompositionItemConfiguration {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                                 .<String, String>chunk(10)
-                                 .reader(new ItemReader<String>() {
+                                 .<ProcessorInfo, ProcessorInfo>chunk(10)
+                                 .reader(new ItemReader<ProcessorInfo>() {
                                      int i = 0;
 
                                      @Override
-                                     public String read()
+                                     public ProcessorInfo read()
                                          throws Exception {
                                          i++;
-                                         return i > 10 ? null : "item";
+                                         ProcessorInfo processorInfo = ProcessorInfo.builder().id(i)
+                                                                                    .build();
+                                         return i > 3 ? null : processorInfo;
                                      }
                                  })
                                  .processor(customItemProcessor())
-                                 .writer(new ItemWriter<String>() {
+                                 .writer(new ItemWriter<ProcessorInfo>() {
                                      @Override
-                                     public void write(final List<? extends String> items)
+                                     public void write(final List<? extends ProcessorInfo> items)
                                          throws Exception {
                                          System.out.println(items);
                                      }
@@ -59,14 +62,18 @@ public class CompositionItemConfiguration {
     }
 
     @Bean
-    public CompositeItemProcessor customItemProcessor() {
-//        CompositeItemProcessor<String, String> compositeProcessor = new CompositeItemProcessor<>();
-        List itemProcessors = new ArrayList();
-        itemProcessors.add(new CustomItemProcessor1());
-        itemProcessors.add(new CustomItemProcessor2());
+    public ItemProcessor<? super ProcessorInfo, ? extends ProcessorInfo> customItemProcessor() {
+        ClassifierCompositeItemProcessor<ProcessorInfo, ProcessorInfo> processor = new ClassifierCompositeItemProcessor<>();
 
-        return new CompositeItemProcessorBuilder<>()
-            .delegates(itemProcessors)
-            .build();
+        ProcessorClassifier<ProcessorInfo, ItemProcessor<?, ? extends ProcessorInfo>> classifier = new ProcessorClassifier();
+        Map<Integer, ItemProcessor<ProcessorInfo, ProcessorInfo>> processorMap = new HashMap<>();
+        processorMap.put(1, new CustomItemProcessor1());
+        processorMap.put(2, new CustomItemProcessor2());
+        processorMap.put(3, new CustomItemProcessor3());
+
+        classifier.setProcessorMap(processorMap);
+        processor.setClassifier(classifier);
+
+        return processor;
     }
 }

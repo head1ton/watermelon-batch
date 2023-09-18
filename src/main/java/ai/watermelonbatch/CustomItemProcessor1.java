@@ -1,14 +1,11 @@
 package ai.watermelonbatch;
 
-import org.springframework.batch.item.ItemProcessor;
-
-public class CustomItemProcessor1 implements ItemProcessor<String, String> {
-
-    private int cnt = 0;
+public class CustomItemProcessor1 implements
+    org.springframework.batch.item.ItemProcessor<ProcessorInfo, ProcessorInfo> {
 
     @Override
-    public String process(final String item) throws Exception {
-        cnt++;
-        return item + cnt;
+    public ProcessorInfo process(final ProcessorInfo item) throws Exception {
+        System.out.println("CustomItemProcessor1");
+        return item;
     }
 }
