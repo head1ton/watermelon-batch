@@ -44,6 +44,10 @@ dependencies {
 //    implementation 'com.thoughtworks.xstream:xstream'
     implementation 'org.modelmapper:modelmapper:3.1.1'
 
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'    // 스케줄 기능을 위해
+    implementation 'org.apache.httpcomponents.client5:httpclient5'
+    // http 통신을 위한 restTemplate
+
 
 }
 
