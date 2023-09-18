@@ -45,7 +45,7 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'
 
     implementation 'org.springframework.boot:spring-boot-starter-quartz'    // 스케줄 기능을 위해
-    implementation 'org.apache.httpcomponents.client5:httpclient5'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     // http 통신을 위한 restTemplate
 
 

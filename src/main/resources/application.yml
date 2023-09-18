@@ -2,10 +2,6 @@ spring:
   profiles:
     active: mysql
 
-  batch:
-    job:
-      names: ${job.name:NONE}
-
   jpa:
     hibernate:
       #      naming:
@@ -67,6 +63,9 @@ spring:
   #        ddl-auto: create-drop
   #      show-sql: true
   batch:
+    job:
+      names: ${job.name:NONE}
+      enabled: false
     jdbc:
       initialize-schema: always
 #      isolation-level-for-create: default
